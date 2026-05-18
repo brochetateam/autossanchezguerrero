@@ -3,6 +3,7 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+    initSplashEntry();
     initHeaderScroll();
     initMobileMenu();
     initThemeToggle();
@@ -12,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initScrollAnimations();
     initCounters();
     initParallax();
+    initLogoSplash();
 });
 
 // Header scroll effect
@@ -308,6 +310,77 @@ function initScrollAnimations() {
     }, { threshold: 0.1 });
 
     document.querySelectorAll('.fade-in-up').forEach(el => fadeObserver.observe(el));
+}
+
+// Logo click → fade transition + video splash
+// Logo click → fade + 2s video → navigate to index.html?splash=1
+function initLogoSplash() {
+    const splashVideo = document.createElement('video');
+    splashVideo.src = 'img/video.mp4';
+    splashVideo.preload = 'auto';
+    splashVideo.muted = true;
+    splashVideo.playsInline = true;
+    splashVideo.load();
+
+    let active = false;
+
+    document.querySelectorAll('.logo').forEach(logo => {
+        logo.addEventListener('click', (e) => {
+            if (active) return;
+
+            const path = window.location.pathname;
+            const isIndex = path.endsWith('index.html') || path === '/' || path === '';
+            if (isIndex) return;
+
+            e.preventDefault();
+            active = true;
+            const targetUrl = 'index.html?splash=1';
+
+            document.body.classList.add('page-exiting');
+
+            const overlay = document.createElement('div');
+            overlay.className = 'page-transition-overlay';
+            document.body.appendChild(overlay);
+
+            setTimeout(() => {
+                const vid = splashVideo.cloneNode(true);
+                vid.muted = true;
+                vid.playsInline = true;
+                overlay.appendChild(vid);
+                overlay.classList.add('active');
+
+                vid.play().catch(() => {
+                    window.location.href = targetUrl;
+                });
+
+                vid.onerror = () => {
+                    window.location.href = targetUrl;
+                };
+            }, 380);
+
+            // Navigate after exactly 2 seconds
+            setTimeout(() => {
+                window.location.href = targetUrl;
+            }, 2000);
+        });
+    });
+}
+
+// Splash entry on index.html: fade page in behind the video, then fade overlay out
+function initSplashEntry() {
+    const overlay = document.getElementById('splash-entry');
+    if (!overlay) return;
+
+    // Let the CSS page-fade animation play, then fade overlay out
+    setTimeout(() => {
+        overlay.classList.add('fade-out');
+        setTimeout(() => {
+            overlay.remove();
+            if (window.history.replaceState) {
+                window.history.replaceState(null, '', window.location.pathname);
+            }
+        }, 550);
+    }, 350);
 }
 
 // Load reviews from Wallapop

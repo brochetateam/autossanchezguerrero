@@ -35,6 +35,12 @@
 </head>
 
 <body>
+<script>
+if (window.location.search.indexOf('splash=1') !== -1) {
+    document.documentElement.classList.add('splash-entry');
+    document.write('<div class="splash-entry-overlay" id="splash-entry"><video src="img/video.mp4" muted autoplay playsinline></video></div>');
+}
+</script>
 
     <!-- Header -->
     <header class="main-header" id="header">

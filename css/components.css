@@ -787,6 +787,87 @@
   margin-bottom: 2.5rem;
 }
 
+/* Logo Video Splash Transition */
+body.page-exiting > *:not(.page-transition-overlay) {
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+}
+
+.page-transition-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: var(--bg-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+}
+
+.page-transition-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.page-transition-overlay video {
+    width: 320px;
+    max-width: 80vw;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.5);
+}
+
+/* Splash Entry (index.html after logo navigation) */
+.splash-entry-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    background: var(--bg-primary);
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.splash-entry-overlay video {
+    width: 320px;
+    max-width: 80vw;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 0 40px rgba(0,0,0,0.5);
+}
+
+.splash-entry-overlay.fade-out {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+}
+
+html.splash-entry .splash-entry-overlay {
+    display: flex;
+}
+
+html.splash-entry .main-header,
+html.splash-entry main,
+html.splash-entry .section-title,
+html.splash-entry .features-grid,
+html.splash-entry footer,
+html.splash-entry .whatsapp-fixed {
+    opacity: 0;
+    animation: splashPageFadeIn 0.8s ease 0.15s forwards;
+}
+
+html.splash-entry .hero-premium-content > * {
+    opacity: 0;
+    animation: splashPageFadeIn 0.8s ease 0.25s forwards;
+}
+
+@keyframes splashPageFadeIn {
+    to { opacity: 1; }
+}
+
 /* WhatsApp Floating Button */
 .whatsapp-fixed {
   position: fixed;
